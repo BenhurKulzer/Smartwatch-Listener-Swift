@@ -5,7 +5,6 @@
 //  Created by Benhur on 10/10/24.
 //
 
-
 import SwiftUI
 
 struct ItemListView: View {
@@ -13,26 +12,28 @@ struct ItemListView: View {
     
     var body: some View {
         NavigationView {
-            List(viewModel.items) { item in
-                NavigationLink(destination: ItemDetailView(item: item)) {
-                    HStack {
-                        Image(systemName: "location.fill")
-                            .foregroundColor(.white)
-                            .padding(.trailing, 8)
-                        
-                        Text(item.name)
-                            .padding()
-                            .cornerRadius(8)
+            Group {
+                if viewModel.isLoading {
+                    ProgressView("Carregando locais...")
+                        .progressViewStyle(CircularProgressViewStyle())
+                } else {
+                    List(viewModel.items) { item in
+                        NavigationLink(destination: RobotListView(locationName: item.name)) {
+                            HStack {
+                                Image(systemName: "location.fill")
+                                    .foregroundColor(.white)
+                                    .padding(.trailing, 8)
+                                
+                                Text(item.name)
+                                    .padding()
+                                    .cornerRadius(8)
+                            }
+                        }
                     }
+                    .navigationTitle("Locations")
                 }
             }
-            .navigationTitle("Location")
         }
     }
 }
 
-struct ItemListView_Previews: PreviewProvider {
-    static var previews: some View {
-        ItemListView()
-    }
-}
